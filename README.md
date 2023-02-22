@@ -21,6 +21,8 @@ This is an animated plot for the three types of CVD, protanopia, deuteranopia an
 
 The plot was made [SRLAB2](https://www.magnetkern.de/srlab2.html), a variant of CIE LAB. The plotted points are the sRGB primary and secondary colors: red (R), yellow (Y), green (G), cyan (C), blue (B) and magenta (M). Note that these 6 colors are not located at the same angle -- nor are they the same angular distance from one another -- as they would be if they were plotted on an HSV/HSL color wheel.
 
+Common-place labels for the three types of CVD, such as "Red-Green" or "Blue-Yellow" weakness, have been avoided because in the author's opinion they contribute to the misunderstanding of how CVD works.
+
 For more information, Burrus's articles are recommended:
 - [Review of Open Source Color Blindness Simulations](https://daltonlens.org/opensource-cvd-simulation/)
 - [Understanding LMS-based Color Blindness Simulations](https://daltonlens.org/understanding-cvd-simulation)
