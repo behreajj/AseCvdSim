@@ -337,7 +337,7 @@ dlg:button {
 
         app.command.ChangePixelFormat { format = "rgb" }
         app.command.MaskAll()
-        app.command.FlattenLayers()
+        app.command.FlattenLayers { visibleOnly = true }
         app.command.DeselectMask()
         app.command.FitScreen()
 
