@@ -7,7 +7,7 @@ The code has been modified for use with the [Aseprite](https://www.aseprite.org/
 
 To get this script, click on the green `Code` button above, then select `Download Zip`. You can also click on the `aseDaltonLens.lua` file. Beware that some browsers will append a `.txt` file format to script files on download; Aseprite will not recognize the script until this is removed and the original `.lua` format is used. There can also be issues with copying and pasting. Be sure to click on the `Raw` file button; do not copy the formatted code.
 
-To use this script, open Aseprite. In the menu bar, go to `File > Scripts > Open Scripts` Folder. Copy and paste the Lua script from this repository into that folder. Return to Aseprite; go to `File > Scripts > Rescan Scripts` Folder (the default hotkey is `F5`). The script should now be listed under `File > Scripts`. Select `aseDaltonLens.lua` to launch the dialog.
+To use this script, open Aseprite. In the menu bar, go to `File > Scripts > Open Scripts Folder`. Copy and paste the Lua script from this repository into that folder. Return to Aseprite; go to `File > Scripts > Rescan Scripts` Folder (the default hotkey is `F5`). The script should now be listed under `File > Scripts`. Select `aseDaltonLens.lua` to launch the dialog.
 
 To assign a hotkey to the dialog script go to `Edit > Keyboard Shortcuts`. Once the dialog is open, `Alt+O` is the keyboard shortcut for the OK button. `Alt+C` is the shortcut for the CANCEL button.
 

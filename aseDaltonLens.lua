@@ -208,11 +208,12 @@ local function dl_simulate_cvd_vienot1999(deficiency, severity, srgba_image)
         rgbCvd_from_rgb = dl_vienot_protan_rgbCvd_from_rgb
     end
 
-    local composeHex = app.pixelColor.rgba
-    local decompAlpha = app.pixelColor.rgbaA
-    local decompBlue = app.pixelColor.rgbaB
-    local decompGreen = app.pixelColor.rgbaG
-    local decompRed = app.pixelColor.rgbaR
+    local pixelColor = app.pixelColor
+    local composeHex = pixelColor.rgba
+    local decompAlpha = pixelColor.rgbaA
+    local decompBlue = pixelColor.rgbaB
+    local decompGreen = pixelColor.rgbaG
+    local decompRed = pixelColor.rgbaR
     local floor = math.floor
 
     local dict = {}
@@ -303,11 +304,14 @@ dlg:button {
     text = "&OK",
     focus = true,
     onclick = function()
+        -- TODO: Something about this script causes Aseprite to crash.
+
         local activeSprite = app.activeSprite
         if not activeSprite then
             app.alert {
                 title = "Error",
-                text = "There is no active sprite." }
+                text = "There is no active sprite."
+            }
             return
         end
 
@@ -362,9 +366,12 @@ dlg:button {
             end
         end
 
+        local docPrefs = app.preferences.document(activeSprite)
+        local onionSkinPrefs = docPrefs.onionskin
+        onionSkinPrefs.loop_tag = false
+
         app.activeFrame = dupSprite.frames[actFrIdx]
         app.refresh()
-        app.command.Refresh()
     end
 }
 
