@@ -29,13 +29,13 @@
 
     For more information, please refer to https://unlicense.org
     --]]
-local DLDeficiencies = {
+local DLDeficiencies <const> = {
     "PROTANOPIA",
     "DEUTERANOPIA",
     "TRITANOPIA"
 }
 
-local brettel_protan_params = {
+local brettel_protan_params <const> = {
     rgbCvdFromRgb_1 = {
         0.14980, 1.19548, -0.34528,
         0.10764, 0.84864, 0.04372,
@@ -49,7 +49,7 @@ local brettel_protan_params = {
     separationPlaneNormalInRgb = { 0.00048, 0.00393, -0.00441 }
 }
 
-local brettel_deutan_params = {
+local brettel_deutan_params <const> = {
     rgbCvdFromRgb_1 = {
         0.36477, 0.86381, -0.22858,
         0.26294, 0.64245, 0.09462,
@@ -63,7 +63,7 @@ local brettel_deutan_params = {
     separationPlaneNormalInRgb = { -0.00281, -0.00611, 0.00892 }
 }
 
-local brettel_tritan_params = {
+local brettel_tritan_params <const> = {
     rgbCvdFromRgb_1 = {
         1.01277, 0.13548, -0.14826,
         -0.01243, 0.86812, 0.14431,
@@ -77,26 +77,26 @@ local brettel_tritan_params = {
     separationPlaneNormalInRgb = { 0.03901, -0.02788, -0.01113 }
 }
 
-local dl_vienot_protan_rgbCvd_from_rgb = {
+local dl_vienot_protan_rgbCvd_from_rgb <const> = {
     0.11238, 0.88762, 0.00000,
     0.11238, 0.88762, -0.00000,
     0.00401, -0.00401, 1.00000
 }
 
-local dl_vienot_deutan_rgbCvd_from_rgb = {
+local dl_vienot_deutan_rgbCvd_from_rgb <const> = {
     0.29275, 0.70725, 0.00000,
     0.29275, 0.70725, -0.00000,
     -0.02234, 0.02234, 1.00000
 }
 
-local dl_vienot_tritan_rgbCvd_from_rgb = {
+local dl_vienot_tritan_rgbCvd_from_rgb <const> = {
     1.00000, 0.14461, -0.14461,
     0.00000, 0.85924, 0.14076,
     -0.00000, 0.85924, 0.14076
 }
 
 local function linearRGB_from_sRGB(v)
-    local fv = v / 255.0
+    local fv <const> = v / 255.0
     if fv < 0.04045 then
         return fv / 12.92
     end
@@ -122,36 +122,37 @@ local function dl_simulate_cvd_brettel1997(deficiency, severity, srgba_image)
         params = brettel_protan_params
     end
 
-    local n = params.separationPlaneNormalInRgb
+    local n <const> = params.separationPlaneNormalInRgb
 
-    local composeHex = app.pixelColor.rgba
-    local decompAlpha = app.pixelColor.rgbaA
-    local decompBlue = app.pixelColor.rgbaB
-    local decompGreen = app.pixelColor.rgbaG
-    local decompRed = app.pixelColor.rgbaR
-    local floor = math.floor
+    local composeHex <const> = app.pixelColor.rgba
+    local decompAlpha <const> = app.pixelColor.rgbaA
+    local decompBlue <const> = app.pixelColor.rgbaB
+    local decompGreen <const> = app.pixelColor.rgbaG
+    local decompRed <const> = app.pixelColor.rgbaR
+    local floor <const> = math.floor
 
-    local dict = {}
-    local target = srgba_image:clone()
+    ---@type table<integer, integer>
+    local dict <const> = {}
+    local target <const> = srgba_image:clone()
     if severity <= 0.0 then return target end
-    local useLerp = severity < 0.999999
-    local u = 1.0 - severity
+    local useLerp <const> = severity < 0.999999
+    local u <const> = 1.0 - severity
 
-    local pixels = target:pixels()
+    local pixels <const> = target:pixels()
     for pixel in pixels do
-        local hex0 = pixel()
+        local hex0 <const> = pixel()
         local hex1 = 0x0
         if dict[hex0] then
             hex1 = dict[hex0]
         else
-            local rgb = {
+            local rgb <const> = {
                 linearRGB_from_sRGB(decompRed(hex0)),
                 linearRGB_from_sRGB(decompGreen(hex0)),
                 linearRGB_from_sRGB(decompBlue(hex0))
             }
 
             -- Check on which plane we should project by comparing wih the separation plane normal.
-            local dotWithSepPlane = rgb[1] * n[1]
+            local dotWithSepPlane <const> = rgb[1] * n[1]
                 + rgb[2] * n[2]
                 + rgb[3] * n[3]
             local rgbCvdFromRgb = nil
@@ -161,7 +162,7 @@ local function dl_simulate_cvd_brettel1997(deficiency, severity, srgba_image)
                 rgbCvdFromRgb = params.rgbCvdFromRgb_2
             end
 
-            local rgb_cvd = {
+            local rgb_cvd <const> = {
                 rgbCvdFromRgb[1] * rgb[1] +
                 rgbCvdFromRgb[2] * rgb[2] +
                 rgbCvdFromRgb[3] * rgb[3],
@@ -208,34 +209,35 @@ local function dl_simulate_cvd_vienot1999(deficiency, severity, srgba_image)
         rgbCvd_from_rgb = dl_vienot_protan_rgbCvd_from_rgb
     end
 
-    local pixelColor = app.pixelColor
-    local composeHex = pixelColor.rgba
-    local decompAlpha = pixelColor.rgbaA
-    local decompBlue = pixelColor.rgbaB
-    local decompGreen = pixelColor.rgbaG
-    local decompRed = pixelColor.rgbaR
-    local floor = math.floor
+    local pixelColor <const> = app.pixelColor
+    local composeHex <const> = pixelColor.rgba
+    local decompAlpha <const> = pixelColor.rgbaA
+    local decompBlue <const> = pixelColor.rgbaB
+    local decompGreen <const> = pixelColor.rgbaG
+    local decompRed <const> = pixelColor.rgbaR
+    local floor <const> = math.floor
 
-    local dict = {}
-    local target = srgba_image:clone()
+    ---@type table<integer, integer>
+    local dict <const> = {}
+    local target <const> = srgba_image:clone()
     if severity <= 0.0 then return target end
-    local useLerp = severity < 0.999999
-    local u = 1.0 - severity
+    local useLerp <const> = severity < 0.999999
+    local u <const> = 1.0 - severity
 
-    local pixels = target:pixels()
+    local pixels <const> = target:pixels()
     for pixel in pixels do
-        local hex0 = pixel()
+        local hex0 <const> = pixel()
         local hex1 = 0x0
         if dict[hex0] then
             hex1 = dict[hex0]
         else
-            local rgb = {
+            local rgb <const> = {
                 linearRGB_from_sRGB(decompRed(hex0)),
                 linearRGB_from_sRGB(decompGreen(hex0)),
                 linearRGB_from_sRGB(decompBlue(hex0))
             }
 
-            local rgb_cvd = {
+            local rgb_cvd <const> = {
                 rgbCvd_from_rgb[1] * rgb[1] +
                 rgbCvd_from_rgb[2] * rgb[2] +
                 rgbCvd_from_rgb[3] * rgb[3],
@@ -277,12 +279,12 @@ local function dl_simulate_cvd(deficiency, severity, srgba_image)
     end
 end
 
-local defaults = {
+local defaults <const> = {
     deficiency = "PROTANOPIA",
     severity = 100,
 }
 
-local dlg = Dialog { title = "Simulate CVD" }
+local dlg <const> = Dialog { title = "Simulate CVD" }
 
 dlg:combobox {
     id = "deficiency",
@@ -304,9 +306,7 @@ dlg:button {
     text = "&OK",
     focus = true,
     onclick = function()
-        -- TODO: Something about this script causes Aseprite to crash.
-
-        local activeSprite = app.activeSprite
+        local activeSprite <const> = app.sprite
         if not activeSprite then
             app.alert {
                 title = "Error",
@@ -315,7 +315,7 @@ dlg:button {
             return
         end
 
-        local colorSpace = activeSprite.colorSpace
+        local colorSpace <const> = activeSprite.colorSpace
         if colorSpace ~= ColorSpace { sRGB = true } then
             app.alert {
                 title = "Error",
@@ -327,17 +327,18 @@ dlg:button {
             return
         end
 
-        local actFrIdx = app.activeFrame.frameNumber
+        local actFrObj <const> = app.frame or activeSprite.frames[1]
+        local actFrIdx <const> = actFrObj.frameNumber
 
-        local args = dlg.data
-        local deficiency = args.deficiency
+        local args <const> = dlg.data
+        local deficiency <const> = args.deficiency
             or defaults.deficiency --[[@as string]]
-        local severity = args.severity
+        local severity <const> = args.severity
             or defaults.severity --[[@as integer]]
 
-        local dupSprite = Sprite(activeSprite)
+        local dupSprite <const> = Sprite(activeSprite)
         dupSprite.filename = "CVD Simulation"
-        app.activeSprite = dupSprite
+        app.sprite = dupSprite
 
         app.command.ChangePixelFormat { format = "rgb" }
         app.command.MaskAll()
@@ -345,32 +346,32 @@ dlg:button {
         app.command.DeselectMask()
         app.command.FitScreen()
 
-        local sev01 = severity * 0.01
-        local frames = dupSprite.frames
-        local sourceLayer = dupSprite.layers[1]
+        local sev01 <const> = severity * 0.01
+        local frames <const> = dupSprite.frames
+        local sourceLayer <const> = dupSprite.layers[1]
         sourceLayer.name = "original"
-        local targetLayer = dupSprite:newLayer()
+        local targetLayer <const> = dupSprite:newLayer()
         targetLayer.name = deficiency:lower()
 
-        local lenFrames = #frames
+        local lenFrames <const> = #frames
         local i = 0
         while i < lenFrames do
             i = i + 1
-            local frame = frames[i]
-            local sourceCel = sourceLayer:cel(frame)
+            local frame <const> = frames[i]
+            local sourceCel <const> = sourceLayer:cel(frame)
             if sourceCel then
-                local sourceImage = sourceCel.image
-                local sourcePos = sourceCel.position
-                local targetImage = dl_simulate_cvd(deficiency, sev01, sourceImage)
+                local sourceImage <const> = sourceCel.image
+                local sourcePos <const> = sourceCel.position
+                local targetImage <const> = dl_simulate_cvd(deficiency, sev01, sourceImage)
                 dupSprite:newCel(targetLayer, frame, targetImage, sourcePos)
             end
         end
 
-        local docPrefs = app.preferences.document(activeSprite)
-        local onionSkinPrefs = docPrefs.onionskin
+        local docPrefs <const> = app.preferences.document(activeSprite)
+        local onionSkinPrefs <const> = docPrefs.onionskin
         onionSkinPrefs.loop_tag = false
 
-        app.activeFrame = dupSprite.frames[actFrIdx]
+        app.frame = dupSprite.frames[actFrIdx]
         app.refresh()
     end
 }
@@ -384,4 +385,7 @@ dlg:button {
     end
 }
 
-dlg:show { wait = false }
+dlg:show {
+    autoscrollbars = false,
+    wait = false
+}
