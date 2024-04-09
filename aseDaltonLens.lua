@@ -151,7 +151,8 @@ local function dl_simulate_cvd_brettel1997(deficiency, severity, srgba_image)
                 linearRGB_from_sRGB(decompBlue(hex0))
             }
 
-            -- Check on which plane we should project by comparing wih the separation plane normal.
+            -- Check on which plane we should project by comparing wih the
+            -- separation plane normal.
             local dotWithSepPlane <const> = rgb[1] * n[1]
                 + rgb[2] * n[2]
                 + rgb[3] * n[3]
@@ -336,6 +337,14 @@ dlg:button {
         local severity <const> = args.severity
             or defaults.severity --[[@as integer]]
 
+        local appTool <const> = app.tool
+        if appTool then
+            local toolName <const> = appTool.id
+            if toolName == "slice" then
+                app.tool = "hand"
+            end
+        end
+
         local dupSprite <const> = Sprite(activeSprite)
         dupSprite.filename = "CVD Simulation"
         app.sprite = dupSprite
@@ -367,9 +376,23 @@ dlg:button {
             end
         end
 
-        local docPrefs <const> = app.preferences.document(activeSprite)
-        local onionSkinPrefs <const> = docPrefs.onionskin
-        onionSkinPrefs.loop_tag = false
+        local appPrefs <const> = app.preferences
+        if appPrefs then
+            local docPrefs <const> = appPrefs.document(activeSprite)
+            if docPrefs then
+                local onionSkinPrefs <const> = docPrefs.onionskin
+                if onionSkinPrefs then
+                    onionSkinPrefs.loop_tag = false
+                end
+
+                local thumbPrefs <const> = docPrefs.thumbnails
+                if thumbPrefs then
+                    thumbPrefs.enabled = true
+                    thumbPrefs.zoom = 1
+                    thumbPrefs.overlay_enabled = true
+                end
+            end
+        end
 
         app.frame = dupSprite.frames[actFrIdx]
         app.refresh()
